@@ -1,0 +1,7 @@
+------------------29/1/2022 ChangeLog------------------------------------------------
+- Update char controller's asset pack (Low Poly FPS) to newer and full version.
+- Restructured, cleaned-up, and re-organized asset folder and assets.
+- Unused assets are deleted, old assets are moved into Old Stuff, and remaining assets are moved into their correct folders
+- Added new essential plugins including PostProcessing for asset packs and ProBuilder for prototyping
+- Complete overhaul and rewritten of all targets, target spawning, scores, timer, and UI logics in new scripts.
+--------------------------------------------------------------------------------------
