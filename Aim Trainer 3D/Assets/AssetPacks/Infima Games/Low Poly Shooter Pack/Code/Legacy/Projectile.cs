@@ -62,8 +62,23 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 			Destroy(gameObject, destroyAfter);
 		}
 
-		//If the bullet collides with anything
-		private void OnCollisionEnter(Collision collision)
+        private void OnDestroy()
+        {
+			if (bulletData.HasHitTarget)
+			{
+				if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotCount(true, 1);
+			}
+			else
+			{
+				if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotCount(false, 1);
+			}
+
+			bulletData.BulletFinalPosition = transform.position;
+			TelemetryLogger.Log(this, "Bullet Destroyed Event", bulletData);
+		}
+
+        //If the bullet collides with anything
+        private void OnCollisionEnter(Collision collision)
 		{
 			//Ignore collisions with other projectiles.
 			if (collision.gameObject.GetComponent<Projectile>() != null)
@@ -105,9 +120,8 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
 				bulletData.HasHitTarget = true;
 				bulletData.TargetName = collision.gameObject.name;
+
 				Debug.Log("Hit Target: " + collision.gameObject.name);
-				//Destroy bullet object
-				//Destroy(gameObject);
 			}
 
 			//If bullet collides with "Metal" tag
@@ -178,11 +192,8 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 			{
 				StartCoroutine(DestroyTimer());
 			}
-			//Otherwise, destroy bullet on impact
-			else
-			{
-				bulletData.BulletFinalPosition = transform.position;
-				TelemetryLogger.Log(this, "Bullet Destroyed Event", bulletData);
+            else
+            {
 				Destroy(gameObject);
 			}
 		}

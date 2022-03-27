@@ -15,6 +15,7 @@ public class ShootToActivate : MonoBehaviour
         if (collision.collider.CompareTag("Bullet"))
         {
             OnGettingShot?.Invoke();
+            if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotCount(false, -1);
         }
     }
 }

@@ -108,6 +108,7 @@ public class SpawnManager : MonoBehaviour
     private void StopSpawningAndReset()
     {
         hasStartedSpawningTarget = false;
+        if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(false);
         OnTargetSpawnStopped?.Invoke();
         timeSinceLastSpawn = timeBetweenSpawn;
     }
@@ -130,6 +131,7 @@ public class SpawnManager : MonoBehaviour
         currentListElement = 0;
         //if (targetSpawnNumbersText != null) targetSpawnNumbersText.text = "Targets Remaining: " + targetSpawnNumbers.ToString();
         hasStartedSpawningTarget = true;
+        if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(true);
         OnTargetSpawnStarted?.Invoke();
     }
 
