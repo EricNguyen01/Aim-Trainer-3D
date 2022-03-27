@@ -105,6 +105,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 
 				bulletData.HasHitTarget = true;
 				bulletData.TargetName = collision.gameObject.name;
+				Debug.Log("Hit Target: " + collision.gameObject.name);
 				//Destroy bullet object
 				//Destroy(gameObject);
 			}

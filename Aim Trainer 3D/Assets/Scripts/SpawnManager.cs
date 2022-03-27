@@ -7,8 +7,13 @@ using TMPro;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("The total number of targets to spawn")]
+    [Tooltip("The total number of targets to spawn per play session")]
     private int targetSpawnNumbers;
+
+    [SerializeField]
+    [Tooltip("The maximum number of targets that the gun range can have before new targets can be spawned")]
+    private int maxNumberOfTargetAliveAllow;
+    private int currentNumberOfTargetAlive = 0;
 
     [SerializeField]
     [Tooltip("The wait time before a new target is spawned")] 
@@ -27,6 +32,16 @@ public class SpawnManager : MonoBehaviour
     private int currentTargetSpawnedNum = 0;
     private int currentListElement = 0;
 
+    private void OnEnable()
+    {
+        Target.OnTargetDestroyed += DecreaseNumberOfTargetsAlive;
+    }
+
+    private void OnDisable()
+    {
+        Target.OnTargetDestroyed -= DecreaseNumberOfTargetsAlive;
+    }
+
     private void Start()
     {
         timeSinceLastSpawn = timeBetweenSpawn;
@@ -38,6 +53,12 @@ public class SpawnManager : MonoBehaviour
         if (targetSpawnNumbersText != null) targetSpawnNumbersText.text = "Targets Remaining: " + spawnNumText.ToString();
 
         if (!hasStartedSpawningTarget) return;
+
+        if(maxNumberOfTargetAliveAllow != 0 && currentNumberOfTargetAlive >= maxNumberOfTargetAliveAllow)
+        {
+            timeSinceLastSpawn = 0f;
+            return;
+        }
 
         if(timeSinceLastSpawn >= timeBetweenSpawn)
         {
@@ -67,6 +88,7 @@ public class SpawnManager : MonoBehaviour
 
         targetSpawnerSelected.SpawnTarget();
         currentTargetSpawnedNum++;
+        currentNumberOfTargetAlive++;
     }
 
     private void ShuffleTargetSpawnerList()
@@ -87,7 +109,6 @@ public class SpawnManager : MonoBehaviour
     {
         hasStartedSpawningTarget = false;
         OnTargetSpawnStopped?.Invoke();
-        //currentTargetSpawnedNum = 0;
         timeSinceLastSpawn = timeBetweenSpawn;
     }
 
@@ -97,6 +118,7 @@ public class SpawnManager : MonoBehaviour
         if (hasStartedSpawningTarget) return;
 
         currentTargetSpawnedNum = 0;
+        currentNumberOfTargetAlive = 0;
 
         if (targetSpawners == null || targetSpawners.Count == 0)
         {
@@ -109,5 +131,10 @@ public class SpawnManager : MonoBehaviour
         //if (targetSpawnNumbersText != null) targetSpawnNumbersText.text = "Targets Remaining: " + targetSpawnNumbers.ToString();
         hasStartedSpawningTarget = true;
         OnTargetSpawnStarted?.Invoke();
+    }
+
+    public void DecreaseNumberOfTargetsAlive()
+    {
+        currentNumberOfTargetAlive--;
     }
 }

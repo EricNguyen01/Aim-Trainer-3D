@@ -12,12 +12,12 @@ public class ScoreAndHighScore : MonoBehaviour
 
     private void OnEnable()
     {
-        Target.OnTargetDestroyed += SetCurrentScore;
+        Target.OnTargetHitByPlayer += SetCurrentScore;
     }
 
     private void OnDisable()
     {
-        Target.OnTargetDestroyed -= SetCurrentScore;
+        Target.OnTargetHitByPlayer -= SetCurrentScore;
     }
 
     private void Start()

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class TargetSpawner : MonoBehaviour
 {
+    [SerializeField] private bool spawnMovingTargets = false;
     [SerializeField] private List<Target> targetsToSpawn = new List<Target>();
+
+    public static event System.Action OnTargetSpawnerSpawnedNewTarget;
 
     // Start is called before the first frame update
     private void Start()
@@ -17,29 +20,17 @@ public class TargetSpawner : MonoBehaviour
     {
         if (targetsToSpawn == null) return;
 
-        DestroyExistingStaticTarget();//before spawning new 
+        OnTargetSpawnerSpawnedNewTarget?.Invoke();
 
         int i = 0;
         if(targetsToSpawn.Count > 0) i = Random.Range(0, targetsToSpawn.Count);
 
-        GameObject targetObj = Instantiate(targetsToSpawn[i].gameObject, transform.position, Quaternion.identity, transform);
-        Target target = targetObj.GetComponent<Target>();
-        if (target == null) target = targetObj.AddComponent<Target>();
-        target.SetTargetSpawnerThatSpawnedThisTarget(this);
-    }
-
-    private void DestroyExistingStaticTarget()
-    {
-        if (transform.childCount > 0)
+        GameObject targetObj = Instantiate(targetsToSpawn[i].gameObject, transform.position, Quaternion.LookRotation(transform.forward), transform);
+        Target targetComponent = targetObj.GetComponent<Target>();
+        if(targetComponent != null)
         {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                Target target = transform.GetChild(i).GetComponent<Target>();
-                if (target.isStatic)
-                {
-                    target.DestroyTarget();
-                }
-            }
+            if (spawnMovingTargets) targetComponent.isStatic = false;
+            else targetComponent.isStatic = true;
         }
     }
 
