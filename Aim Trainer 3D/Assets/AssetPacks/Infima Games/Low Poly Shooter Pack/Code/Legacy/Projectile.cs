@@ -133,29 +133,29 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 			{
 				//Instantiate random impact prefab from array
 				Instantiate(metalImpactPrefabs[Random.Range
-						(0, bloodImpactPrefabs.Length)], transform.position,
+						(0, metalImpactPrefabs.Length)], transform.position,
 					Quaternion.LookRotation(collision.contacts[0].normal));
 				//Destroy bullet object
 				//Destroy(gameObject);
 			}
 
 			//If bullet collides with "Dirt" tag
-			if (collision.transform.tag == "Dirt" || collision.transform.CompareTag("Untagged"))
+			if (collision.transform.tag == "Dirt")
 			{
 				//Instantiate random impact prefab from array
 				Instantiate(dirtImpactPrefabs[Random.Range
-						(0, bloodImpactPrefabs.Length)], transform.position,
+						(0, dirtImpactPrefabs.Length)], transform.position,
 					Quaternion.LookRotation(collision.contacts[0].normal));
 				//Destroy bullet object
 				//Destroy(gameObject);
 			}
 
 			//If bullet collides with "Concrete" tag
-			if (collision.transform.tag == "Concrete")
+			if (collision.transform.tag == "Concrete" || collision.transform.CompareTag("Untagged"))
 			{
 				//Instantiate random impact prefab from array
 				Instantiate(concreteImpactPrefabs[Random.Range
-						(0, bloodImpactPrefabs.Length)], transform.position,
+						(0, concreteImpactPrefabs.Length)], transform.position,
 					Quaternion.LookRotation(collision.contacts[0].normal));
 				//Destroy bullet object
 				//Destroy(gameObject);
