@@ -29,6 +29,7 @@ public class Target : MonoBehaviour
     private Collider targetCollider;
     private float currentTimeAlive = 0f;
     private bool movingTowardEndPos = true;
+    private TargetSpawner targetSpawnerThatSpawnedThisTarget;
 
     public static event System.Action<int> OnTargetHitByPlayer;
     public static event System.Action OnTargetDestroyed;
@@ -78,6 +79,7 @@ public class Target : MonoBehaviour
         {
             Debug.Log("Bullet Hit: " + name);
             OnTargetHitByPlayer?.Invoke(targetDestroyedScore);
+            targetSpawnerThatSpawnedThisTarget.PlayFruitDestroySound();
             DestroyTarget();
         }
     }
@@ -157,5 +159,10 @@ public class Target : MonoBehaviour
         {
             DestroyTarget();
         }
+    }
+
+    public void SetTargetSpawner(TargetSpawner targetSpawner)
+    {
+        targetSpawnerThatSpawnedThisTarget = targetSpawner;
     }
 }

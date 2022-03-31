@@ -2,15 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class RoundTimer : MonoBehaviour
 {
+    [SerializeField] private bool displayTimeOnStart;
+
     [SerializeField]
     [Tooltip("Whether this timer is counting up or down. \n Default is count up since we are looking for the player's best time.")]
     private bool isCountingDown = false;
 
+    [Header("Countdown Setting")]
     [SerializeField] [Tooltip("If timer is counting down, when should the start time be")]
     private float countdownFrom;
+    [SerializeField] private UnityEvent OnCountdownFinished;
 
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI bestTimeText;
@@ -23,10 +28,15 @@ public class RoundTimer : MonoBehaviour
 
     private bool startTimer = false;
 
+    private bool displayBlankTime = false;
+
     private void Start()
     {
-        if (isCountingDown) timerText.text = DisplayTimeText(currentCountdownTime);
-        else timerText.text = DisplayTimeText(currentTime);
+        if (displayTimeOnStart)
+        {
+            if (isCountingDown) timerText.text = DisplayTimeText(currentCountdownTime);
+            else timerText.text = DisplayTimeText(currentTime);
+        }
     }
 
     private void Update()
@@ -48,7 +58,9 @@ public class RoundTimer : MonoBehaviour
         {
             currentCountdownTime = 0f;
             startTimer = false;
+            OnCountdownFinished?.Invoke();
         }
+
         if (timerText != null) timerText.text = DisplayTimeText(currentCountdownTime);
     }
 
@@ -73,7 +85,16 @@ public class RoundTimer : MonoBehaviour
     {
         startTimer = false;
 
-        if (isCountingDown) return;
+        if (isCountingDown)
+        {
+            if (timerText != null)
+            {
+                timerText.text = DisplayTimeText(currentCountdownTime);
+                if (displayBlankTime) timerText.text = string.Empty;
+            }
+
+            return;
+        }
 
         if(currentTime < bestTime)
         {
@@ -90,6 +111,11 @@ public class RoundTimer : MonoBehaviour
         string secondsText = seconds.ToString();
         if (seconds < 10) secondsText = "0" + secondsText;
 
-        return "Time: " + minutes.ToString() + ":" + secondsText;
+        return minutes.ToString() + ":" + secondsText;
+    }
+
+    public void SetDisplayBlankTimeOnCountdownFinished(bool status)
+    {
+        displayBlankTime = status;
     }
 }

@@ -118,6 +118,10 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 						(0, bloodImpactPrefabs.Length)], transform.position,
 					Quaternion.LookRotation(collision.contacts[0].normal));
 
+				TargetScript targetScript = collision.transform.gameObject.GetComponent
+					<TargetScript>();
+				if (targetScript != null) targetScript.isHit = true;
+
 				bulletData.HasHitTarget = true;
 				bulletData.TargetName = collision.gameObject.name;
 
@@ -157,7 +161,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 				//Destroy(gameObject);
 			}
 
-			//If bullet collides with "Target" tag
+			/*If bullet collides with "Target" tag
 			if (collision.transform.tag == "Target")
 			{
 				//Toggle "isHit" on target object
@@ -166,7 +170,7 @@ namespace InfimaGames.LowPolyShooterPack.Legacy
 				if (targetScript != null) targetScript.isHit = true;
 				//Destroy bullet object
 				//Destroy(gameObject);
-			}
+			}*/
 
 			//If bullet collides with "ExplosiveBarrel" tag
 			if (collision.transform.tag == "ExplosiveBarrel")

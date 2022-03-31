@@ -31,17 +31,18 @@ public class SpawnManager : MonoBehaviour
     private float timeSinceLastSpawn;
     private int currentTargetSpawnedNum = 0;
     private int currentListElement = 0;
+    private bool isCurrentTargetSpawnerSpawningMovingTargets = false;
 
     private void OnEnable()
     {
         Target.OnTargetDestroyed += DecreaseNumberOfTargetsAlive;
-        Target.OnTargetDestroyed += SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
+        Target.OnTargetHitByPlayer += SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
     }
 
     private void OnDisable()
     {
         Target.OnTargetDestroyed -= DecreaseNumberOfTargetsAlive;
-        Target.OnTargetDestroyed -= SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
+        Target.OnTargetHitByPlayer -= SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
     }
 
     private void Start()
@@ -85,6 +86,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         TargetSpawner targetSpawnerSelected = targetSpawners[currentListElement];
+        isCurrentTargetSpawnerSpawningMovingTargets = targetSpawnerSelected.IsSpawningMovingTargets();
 
         currentListElement++;
 
@@ -111,7 +113,7 @@ public class SpawnManager : MonoBehaviour
     {
         hasStartedSpawningTarget = false;
         if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(false);
-        OnTargetSpawnStopped?.Invoke();
+        //OnTargetSpawnStopped?.Invoke();
         timeSinceLastSpawn = timeBetweenSpawn;
     }
 
@@ -131,19 +133,23 @@ public class SpawnManager : MonoBehaviour
 
         ShuffleTargetSpawnerList();
         currentListElement = 0;
+
         //if (targetSpawnNumbersText != null) targetSpawnNumbersText.text = "Targets Remaining: " + targetSpawnNumbers.ToString();
         hasStartedSpawningTarget = true;
+
         if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(true);
+
         OnTargetSpawnStarted?.Invoke();
     }
 
     public void DecreaseNumberOfTargetsAlive()
     {
         currentNumberOfTargetAlive--;
+        if (currentTargetSpawnedNum == targetSpawnNumbers) OnTargetSpawnStopped?.Invoke();
     }
 
-    public void SetTimeSinceLastSpawnAfterPlayerDestroyedATarget()
+    public void SetTimeSinceLastSpawnAfterPlayerDestroyedATarget(int i)
     {
-        timeSinceLastSpawn = timeBetweenSpawn - 0.3f;
+        if(!isCurrentTargetSpawnerSpawningMovingTargets) timeSinceLastSpawn = timeBetweenSpawn - 0.3f;
     }
 }
