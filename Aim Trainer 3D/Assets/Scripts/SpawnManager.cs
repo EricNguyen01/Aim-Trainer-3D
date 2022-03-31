@@ -35,11 +35,13 @@ public class SpawnManager : MonoBehaviour
     private void OnEnable()
     {
         Target.OnTargetDestroyed += DecreaseNumberOfTargetsAlive;
+        Target.OnTargetDestroyed += SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
     }
 
     private void OnDisable()
     {
         Target.OnTargetDestroyed -= DecreaseNumberOfTargetsAlive;
+        Target.OnTargetDestroyed -= SetTimeSinceLastSpawnAfterPlayerDestroyedATarget;
     }
 
     private void Start()
@@ -138,5 +140,10 @@ public class SpawnManager : MonoBehaviour
     public void DecreaseNumberOfTargetsAlive()
     {
         currentNumberOfTargetAlive--;
+    }
+
+    public void SetTimeSinceLastSpawnAfterPlayerDestroyedATarget()
+    {
+        timeSinceLastSpawn = timeBetweenSpawn - 0.3f;
     }
 }
