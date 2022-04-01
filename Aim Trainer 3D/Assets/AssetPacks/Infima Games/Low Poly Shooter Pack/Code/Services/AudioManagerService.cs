@@ -48,7 +48,7 @@ namespace InfimaGames.LowPolyShooterPack
         private IEnumerator DestroySourceWhenFinished(AudioSource source)
         {
             //Wait for the audio source to complete playing the clip.
-            yield return new WaitWhile(() => source.isPlaying);
+            yield return new WaitWhile(() => source.time <= 0.35f);
             
             //Destroy the audio game object, since we're not using it anymore.
             //This isn't really too great for performance, but it works, for now.
@@ -84,9 +84,11 @@ namespace InfimaGames.LowPolyShooterPack
             newAudioSource.volume = settings.Volume;
             //Set spatial blend.
             newAudioSource.spatialBlend = settings.SpatialBlend;
-            
+
             //Play the clip!
-            newAudioSource.PlayOneShot(clip);
+            //newAudioSource.PlayOneShot(clip);
+            newAudioSource.clip = clip;
+            newAudioSource.Play();
             
             //Start a coroutine that will destroy the whole object once it is done!
             if(settings.AutomaticCleanup)
