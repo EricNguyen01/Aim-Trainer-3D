@@ -30,7 +30,7 @@ public class SensitivityChangerUI : MonoBehaviour
     {
         player.BroadcastMessage("SetSens", new Vector2(sens.value, sens.value));
         textValue = sens.value.ToString();
-        input.text = textValue;
+        if(!input.isFocused)input.text = textValue;
     }
 
     void UpdateSens()
