@@ -34,12 +34,7 @@ public class SensitivityChangerUI : MonoBehaviour
     void Update()
     {
         textValue = sens.value.ToString();
-        // input.text = textValue;
-    }
-
-    private void LateUpdate()
-    {
-        UpdateSens();
+        if(!input.isFocused) input.text = textValue;
     }
 
     void UpdateSens()
