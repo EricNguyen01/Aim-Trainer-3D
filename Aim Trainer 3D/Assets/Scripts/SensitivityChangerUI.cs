@@ -22,15 +22,28 @@ public class SensitivityChangerUI : MonoBehaviour
         {
             OnEnterValue(input.text);
         });
+        sens.onValueChanged.AddListener(delegate
+        {
+            player.BroadcastMessage("SetSens", new Vector2(sens.value, sens.value));
+            UpdateSens();
+        });
         input.text = "1";
     }
 
     // Update is called once per frame
     void Update()
     {
-        player.BroadcastMessage("SetSens", new Vector2(sens.value, sens.value));
         textValue = sens.value.ToString();
+<<<<<<< HEAD
         if(!input.isFocused)input.text = textValue;
+=======
+        // input.text = textValue;
+    }
+
+    private void LateUpdate()
+    {
+        UpdateSens();
+>>>>>>> 9b512b719008d3b3939de256ebccc73029b3736c
     }
 
     void UpdateSens()
