@@ -136,6 +136,11 @@ namespace InfimaGames.LowPolyShooterPack
             return rotation;
         }
 
+        public void SetSens(Vector2 sens)
+        {
+            sensitivity = sens;
+        }
+
         #endregion
     }
 }

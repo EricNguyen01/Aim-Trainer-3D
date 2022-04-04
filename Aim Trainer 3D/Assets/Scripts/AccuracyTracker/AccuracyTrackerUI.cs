@@ -37,8 +37,8 @@ public class AccuracyTrackerUI : MonoBehaviour
         this.shotConnected = shotConnected;
         totalShotCount = shotCount;
 
-        textMeshProUI.text = "Shot Connected: " + this.shotConnected.ToString() + 
-                             "\n Total Shot Fired: " + totalShotCount.ToString() + 
+        textMeshProUI.text = "Shots Connected: " + this.shotConnected.ToString() + 
+                             "\n Total Shots Fired: " + totalShotCount.ToString() + 
                              "\n Accuracy: " + accuracy.ToString() + " %";
     }
 }
