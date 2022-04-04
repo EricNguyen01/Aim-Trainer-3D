@@ -32,6 +32,12 @@ public class SpawnManager : MonoBehaviour
     private int currentTargetSpawnedNum = 0;
     private int currentListElement = 0;
     private bool isCurrentTargetSpawnerSpawningMovingTargets = false;
+    private ShootToActivate[] startButtons;
+
+    private void Awake()
+    {
+        startButtons = FindObjectsOfType<ShootToActivate>();
+    }
 
     private void OnEnable()
     {
@@ -113,7 +119,6 @@ public class SpawnManager : MonoBehaviour
     {
         hasStartedSpawningTarget = false;
         if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(false);
-        //OnTargetSpawnStopped?.Invoke();
         timeSinceLastSpawn = timeBetweenSpawn;
     }
 
@@ -139,17 +144,44 @@ public class SpawnManager : MonoBehaviour
 
         if (AccuracyTracker.accuracyTrackerInstance != null) AccuracyTracker.accuracyTrackerInstance.SetShotStartRegisterationStatus(true);
 
+        TemporaryDisableNonActivatedStartButtons(true);
+
         OnTargetSpawnStarted?.Invoke();
     }
 
     public void DecreaseNumberOfTargetsAlive()
     {
         currentNumberOfTargetAlive--;
-        if (currentTargetSpawnedNum == targetSpawnNumbers) OnTargetSpawnStopped?.Invoke();
+        if (currentTargetSpawnedNum == targetSpawnNumbers)//targets remaining = 0 (all targets spawned and spawn manager stopped spawning)
+        {
+            OnTargetSpawnStopped?.Invoke();
+            TemporaryDisableNonActivatedStartButtons(false);
+        }
     }
 
     public void SetTimeSinceLastSpawnAfterPlayerDestroyedATarget(int i)
     {
         if(!isCurrentTargetSpawnerSpawningMovingTargets) timeSinceLastSpawn = timeBetweenSpawn - 0.3f;
+    }
+
+    public void TemporaryDisableNonActivatedStartButtons(bool disabled)
+    {
+        if (startButtons == null || startButtons.Length == 0) return;
+
+        if (disabled)
+        {
+            for(int i = 0; i < startButtons.Length; i++)
+            {
+                if (startButtons[i].HasActivated()) continue;
+                startButtons[i].TemporaryDisable(true);
+            }
+            return;
+        }
+
+        for (int i = 0; i < startButtons.Length; i++)
+        {
+            startButtons[i].TemporaryDisable(false);
+        }
+
     }
 }

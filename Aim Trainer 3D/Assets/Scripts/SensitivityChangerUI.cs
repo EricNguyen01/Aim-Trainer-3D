@@ -9,7 +9,7 @@ public class SensitivityChangerUI : MonoBehaviour
 {
     Slider sens;
     GameObject player;
-    public TMPro.TMP_InputField input;
+    public TMP_InputField input;
 
     string textValue;
 
@@ -30,6 +30,7 @@ public class SensitivityChangerUI : MonoBehaviour
     {
         player.BroadcastMessage("SetSens", new Vector2(sens.value, sens.value));
         textValue = sens.value.ToString();
+        input.text = textValue;
     }
 
     void UpdateSens()
@@ -55,7 +56,8 @@ public class SensitivityChangerUI : MonoBehaviour
             sens.value = temp;
             input.text = value;
         }
-        catch(FormatException e)
+        
+        catch
         {
             UpdateSens();
         }
