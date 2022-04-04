@@ -30,15 +30,9 @@ public class SensitivityChangerUI : MonoBehaviour
         input.text = "1";
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        textValue = sens.value.ToString();
-        if(!input.isFocused) input.text = textValue;
-    }
-
     void UpdateSens()
     {
+        textValue = sens.value.ToString();
         input.text = textValue;
     }
 
@@ -58,9 +52,9 @@ public class SensitivityChangerUI : MonoBehaviour
                 value = temp.ToString();
             }
             sens.value = temp;
-            input.text = value;
+            UpdateSens();
         }
-        
+
         catch
         {
             UpdateSens();
